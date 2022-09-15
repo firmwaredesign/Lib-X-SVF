@@ -1,5 +1,31 @@
 # Lib-X-SVF
-A library for implementing SVF and XSVF JTAG players.
+A library for implementing SVF and XSVF JTAG players.  
+This is a fork from https://github.com/decodable/Lib-X-SVF
+
+Added support for using GPIO pins on Raspberry Pi Model 4
+
+## Setup
+You can specify what GPIO pins are used in the trunk/raspberrypy4.h file.
+
+Default these pins are used:
+
+|Signal|GPIO (BCM)|Pin|
+| :---: | :---: | :---: |
+| TCK | GPIO21 | PIN 40 |
+| TDI | GPIO16 | PIN 36 |
+| TDO | GPIO20 | PIN 38 |
+| TMS | GPIO19 | PIN 35 |
+
+
+## Build
+```
+cd Lib-X-SVF/trunk
+make CFLAGS="-DRASPBERRY_PI_4" xsvftool-gpio
+```
+
+Tested working uploading Lattice Certus-NX FPGA image.
+
+# Original README
 
 This is a copy of [libxsvf](http://www.clifford.at/libxsvf/).
 

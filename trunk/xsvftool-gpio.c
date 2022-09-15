@@ -19,6 +19,7 @@
  */
 
 #include "libxsvf.h"
+#include "raspberrypi4.h"
 
 #include <sys/time.h>
 #include <unistd.h>
@@ -144,6 +145,59 @@ static void io_trst(int val)
 static int io_tdo()
 {
 	return io_data->tdo ? 1 : 0;
+}
+#elif defined (RASPBERRY_PI_4)
+
+#include <wiringPi.h>
+
+static void io_setup(void)
+{
+	printf("Setting up Raspberry Pi 4 GPIO pins\n");
+	wiringPiSetupGpio();
+	pinMode(RASPBERRYPI4_TCK_GPIO, OUTPUT);
+	pinMode(RASPBERRYPI4_TDI_GPIO, OUTPUT);
+	pinMode(RASPBERRYPI4_TMS_GPIO, OUTPUT);
+	pinMode(RASPBERRYPI4_TDO_GPIO, INPUT);
+}
+
+static void io_shutdown(void)
+{
+	pinMode(RASPBERRYPI4_TCK_GPIO, INPUT);
+	pinMode(RASPBERRYPI4_TDI_GPIO, INPUT);
+	pinMode(RASPBERRYPI4_TMS_GPIO, INPUT);
+}
+
+static void io_tms(int val)
+{
+	if (val) digitalWrite(RASPBERRYPI4_TMS_GPIO, HIGH);
+	else digitalWrite(RASPBERRYPI4_TMS_GPIO, LOW);
+}
+
+static void io_tdi(int val)
+{
+	if (val) digitalWrite(RASPBERRYPI4_TDI_GPIO, HIGH);
+	else digitalWrite(RASPBERRYPI4_TDI_GPIO, LOW);
+}
+
+static void io_tck(int val)
+{
+	if (val) digitalWrite(RASPBERRYPI4_TCK_GPIO, HIGH);
+	else digitalWrite(RASPBERRYPI4_TCK_GPIO, LOW);
+}
+
+static void io_sck(int val)
+{
+	/* not available */
+}
+
+static void io_trst(int val)
+{
+	/* not available */
+}
+
+static int io_tdo()
+{
+	return digitalRead(RASPBERRYPI4_TDO_GPIO);
 }
 
 #else

@@ -62,6 +62,7 @@ libxsvf.a: tap.o statename.o memname.o svf.o xsvf.o scan.o play.o
 	$(AR) qc $@ $^
 	$(RANLIB) $@
 
+xsvftool-gpio: LDLIBS+=-lwiringPi
 xsvftool-gpio: libxsvf.a xsvftool-gpio.o
 
 xsvftool-ft232h: LDLIBS+=-lftdi -lm
