@@ -254,8 +254,8 @@ static int h_setup(struct libxsvf_host *h)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 2) {
-		fprintf(stderr, "[SETUP]\n");
-		fflush(stderr);
+		fprintf(stdout, "[SETUP]\n");
+		fflush(stdout);
 	}
 	io_setup();
 	return 0;
@@ -265,8 +265,8 @@ static int h_shutdown(struct libxsvf_host *h)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 2) {
-		fprintf(stderr, "[SHUTDOWN]\n");
-		fflush(stderr);
+		fprintf(stdout, "[SHUTDOWN]\n");
+		fflush(stdout);
 	}
 	io_shutdown();
 	return 0;
@@ -276,8 +276,8 @@ static void h_udelay(struct libxsvf_host *h, long usecs, int tms, long num_tck)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 3) {
-		fprintf(stderr, "[DELAY:%ld, TMS:%d, NUM_TCK:%ld]\n", usecs, tms, num_tck);
-		fflush(stderr);
+		fprintf(stdout, "[DELAY:%ld, TMS:%d, NUM_TCK:%ld]\n", usecs, tms, num_tck);
+		fflush(stdout);
 	}
 	if (num_tck > 0) {
 		struct timeval tv1, tv2;
@@ -295,8 +295,8 @@ static void h_udelay(struct libxsvf_host *h, long usecs, int tms, long num_tck)
 		}
 		usecs -= tv2.tv_usec - tv1.tv_usec;
 		if (u->verbose >= 3) {
-			fprintf(stderr, "[DELAY_AFTER_TCK:%ld]\n", usecs > 0 ? usecs : 0);
-			fflush(stderr);
+			fprintf(stdout, "[DELAY_AFTER_TCK:%ld]\n", usecs > 0 ? usecs : 0);
+			fflush(stdout);
 		}
 	}
 	if (usecs > 0) {
@@ -337,7 +337,7 @@ static int h_pulse_tck(struct libxsvf_host *h, int tms, int tdi, int tdo, int rm
 	}
 
 	if (u->verbose >= 4) {
-		fprintf(stderr, "[TMS:%d, TDI:%d, TDO_ARG:%d, TDO_LINE:%d, RMASK:%d, RC:%d]\n", tms, tdi, tdo, line_tdo, rmask, rc);
+		fprintf(stdout, "[TMS:%d, TDI:%d, TDO_ARG:%d, TDO_LINE:%d, RMASK:%d, RC:%d]\n", tms, tdi, tdo, line_tdo, rmask, rc);
 	}
 
 	u->clockcount++;
@@ -348,7 +348,7 @@ static void h_pulse_sck(struct libxsvf_host *h)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 4) {
-		fprintf(stderr, "[SCK]\n");
+		fprintf(stdout, "[SCK]\n");
 	}
 	io_sck(0);
 	io_sck(1);
@@ -358,14 +358,14 @@ static void h_set_trst(struct libxsvf_host *h, int v)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 4) {
-		fprintf(stderr, "[TRST:%d]\n", v);
+		fprintf(stdout, "[TRST:%d]\n", v);
 	}
 	io_trst(v);
 }
 
 static int h_set_frequency(struct libxsvf_host *h, int v)
 {
-	fprintf(stderr, "WARNING: Setting JTAG clock frequency to %d ignored!\n", v);
+	fprintf(stdout, "WARNING: Setting JTAG clock frequency to %d ignored!\n", v);
 	return 0;
 }
 
@@ -373,7 +373,7 @@ static void h_report_tapstate(struct libxsvf_host *h)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 3) {
-		fprintf(stderr, "[%s]\n", libxsvf_state2str(h->tap_state));
+		fprintf(stdout, "[%s]\n", libxsvf_state2str(h->tap_state));
 	}
 }
 
@@ -388,13 +388,13 @@ static void h_report_status(struct libxsvf_host *h, const char *message)
 {
 	struct udata_s *u = h->user_data;
 	if (u->verbose >= 2) {
-		fprintf(stderr, "[STATUS] %s\n", message);
+		fprintf(stdout, "[STATUS] %s\n", message);
 	}
 }
 
 static void h_report_error(struct libxsvf_host *h, const char *file, int line, const char *message)
 {
-	fprintf(stderr, "[%s:%d] %s\n", file, line, message);
+	fprintf(stdout, "[%s:%d] %s\n", file, line, message);
 }
 
 static int realloc_maxsize[LIBXSVF_MEM_NUM];
@@ -405,7 +405,7 @@ static void *h_realloc(struct libxsvf_host *h, void *ptr, int size, enum libxsvf
 	if (size > realloc_maxsize[which])
 		realloc_maxsize[which] = size;
 	if (u->verbose >= 3) {
-		fprintf(stderr, "[REALLOC:%s:%d]\n", libxsvf_mem2str(which), size);
+		fprintf(stdout, "[REALLOC:%s:%d]\n", libxsvf_mem2str(which), size);
 	}
 	return realloc(ptr, size);
 }
@@ -436,37 +436,37 @@ static void copyleft()
 	static int already_printed = 0;
 	if (already_printed)
 		return;
-	fprintf(stderr, "xsvftool-gpio, part of Lib(X)SVF (http://www.clifford.at/libxsvf/).\n");
-	fprintf(stderr, "Copyright (C) 2009  RIEGL Research ForschungsGmbH\n");
-	fprintf(stderr, "Copyright (C) 2009  Clifford Wolf <clifford@clifford.at>\n");
-	fprintf(stderr, "Lib(X)SVF is free software licensed under the ISC license.\n");
+	fprintf(stdout, "xsvftool-gpio, part of Lib(X)SVF (http://www.clifford.at/libxsvf/).\n");
+	fprintf(stdout, "Copyright (C) 2009  RIEGL Research ForschungsGmbH\n");
+	fprintf(stdout, "Copyright (C) 2009  Clifford Wolf <clifford@clifford.at>\n");
+	fprintf(stdout, "Lib(X)SVF is free software licensed under the ISC license.\n");
 	already_printed = 1;
 }
 
 static void help()
 {
 	copyleft();
-	fprintf(stderr, "\n");
-	fprintf(stderr, "Usage: %s [ -r funcname ] [ -v ... ] [ -L | -B ] { -s svf-file | -x xsvf-file | -c } ...\n", progname);
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -r funcname\n");
-	fprintf(stderr, "          Dump C-code for pseudo-allocator based on example files\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -v, -vv, -vvv, -vvvv\n");
-	fprintf(stderr, "          Verbose, more verbose and even more verbose\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -L, -B\n");
-	fprintf(stderr, "          Print RMASK bits as hex value (little or big endian)\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -s svf-file\n");
-	fprintf(stderr, "          Play the specified SVF file\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -x xsvf-file\n");
-	fprintf(stderr, "          Play the specified XSVF file\n");
-	fprintf(stderr, "\n");
-	fprintf(stderr, "   -c\n");
-	fprintf(stderr, "          List devices in JTAG chain\n");
-	fprintf(stderr, "\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "Usage: %s [ -r funcname ] [ -v ... ] [ -L | -B ] { -s svf-file | -x xsvf-file | -c } ...\n", progname);
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -r funcname\n");
+	fprintf(stdout, "          Dump C-code for pseudo-allocator based on example files\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -v, -vv, -vvv, -vvvv\n");
+	fprintf(stdout, "          Verbose, more verbose and even more verbose\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -L, -B\n");
+	fprintf(stdout, "          Print RMASK bits as hex value (little or big endian)\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -s svf-file\n");
+	fprintf(stdout, "          Play the specified SVF file\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -x xsvf-file\n");
+	fprintf(stdout, "          Play the specified XSVF file\n");
+	fprintf(stdout, "\n");
+	fprintf(stdout, "   -c\n");
+	fprintf(stdout, "          List devices in JTAG chain\n");
+	fprintf(stdout, "\n");
 	exit(1);
 }
 
@@ -494,18 +494,18 @@ int main(int argc, char **argv)
 		case 's':
 			gotaction = 1;
 			if (u.verbose)
-				fprintf(stderr, "Playing %s file `%s'.\n", opt == 's' ? "SVF" : "XSVF", optarg);
+				fprintf(stdout, "Playing %s file `%s'.\n", opt == 's' ? "SVF" : "XSVF", optarg);
 			if (!strcmp(optarg, "-"))
 				u.f = stdin;
 			else
 				u.f = fopen(optarg, "rb");
 			if (u.f == NULL) {
-				fprintf(stderr, "Can't open %s file `%s': %s\n", opt == 's' ? "SVF" : "XSVF", optarg, strerror(errno));
+				fprintf(stdout, "Can't open %s file `%s': %s\n", opt == 's' ? "SVF" : "XSVF", optarg, strerror(errno));
 				rc = 1;
 				break;
 			}
 			if (libxsvf_play(&h, opt == 's' ? LIBXSVF_MODE_SVF : LIBXSVF_MODE_XSVF) < 0) {
-				fprintf(stderr, "Error while playing %s file `%s'.\n", opt == 's' ? "SVF" : "XSVF", optarg);
+				fprintf(stdout, "Error while playing %s file `%s'.\n", opt == 's' ? "SVF" : "XSVF", optarg);
 				rc = 1;
 			}
 			if (strcmp(optarg, "-"))
@@ -514,7 +514,7 @@ int main(int argc, char **argv)
 		case 'c':
 			gotaction = 1;
 			if (libxsvf_play(&h, LIBXSVF_MODE_SCAN) < 0) {
-				fprintf(stderr, "Error while scanning JTAG chain.\n");
+				fprintf(stdout, "Error while scanning JTAG chain.\n");
 				rc = 1;
 			}
 			break;
@@ -534,13 +534,13 @@ int main(int argc, char **argv)
 		help();
 
 	if (u.verbose) {
-		fprintf(stderr, "Total number of clock cycles: %d\n", u.clockcount);
-		fprintf(stderr, "Number of significant TDI bits: %d\n", u.bitcount_tdi);
-		fprintf(stderr, "Number of significant TDO bits: %d\n", u.bitcount_tdo);
+		fprintf(stdout, "Total number of clock cycles: %d\n", u.clockcount);
+		fprintf(stdout, "Number of significant TDI bits: %d\n", u.bitcount_tdi);
+		fprintf(stdout, "Number of significant TDO bits: %d\n", u.bitcount_tdo);
 		if (rc == 0) {
-			fprintf(stderr, "Finished without errors.\n");
+			fprintf(stdout, "Finished without errors.\n");
 		} else {
-			fprintf(stderr, "Finished with errors!\n");
+			fprintf(stdout, "Finished with errors!\n");
 		}
 	}
 
